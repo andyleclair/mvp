@@ -1,4 +1,6 @@
-# Mvp
+# MVP - Minimum Viable Phoenix
+
+This app is an extremely basic Phoenix app for teaching how to nicely deploy Phoenix apps.
 
 To start your Phoenix server:
 
@@ -9,7 +11,11 @@ To start your Phoenix server:
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+## Deployment
+
+This app is deployed via [edeliver](https://github.com/edeliver/edeliver).
+
+For more information, see the presentation about this project #TODO: add link here
 
 ## Learn more
 
@@ -18,3 +24,7 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
   * Docs: https://hexdocs.pm/phoenix
   * Mailing list: http://groups.google.com/group/phoenix-talk
   * Source: https://github.com/phoenixframework/phoenix
+
+## Copyright
+
+This code is _free_ man.
