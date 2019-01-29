@@ -11,9 +11,8 @@ defmodule Mvp.Application do
       # Start the Ecto repository
       Mvp.Repo,
       # Start the endpoint when the application starts
-      MvpWeb.Endpoint
-      # Starts a worker by calling: Mvp.Worker.start_link(arg)
-      # {Mvp.Worker, arg},
+      MvpWeb.Endpoint,
+      Mvp.Counter
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
