@@ -34,10 +34,11 @@ fi
 AWS_BUCKET="server-stuff"
 RELEASE_STORE="s3://$AWS_ACCESS_KEY_ID@$AWS_SECRET_ACCESS_KEY:${AWS_BUCKET}/${APP}/$MIX_ENV"
 
-PRODUCTION_HOSTS=$(aws ec2 describe-instances --region us-west-2 --output json "Name=tag:Application,Values=api" "Name=instance-state-name,Values=running" --query "Reservations[*].Instances[*].[PublicIpAddress]" | jq ".[] | .[] | .[]" | tr -d '"')
+PRODUCTION_HOSTS=$(aws ec2 describe-instances --region us-west-2 --output json --filters "Name=tag:Environment,Values=prod" "Name=tag:Application,Values=${APP}" "Name=instance-state-name,Values=running"  --query "Reservations[*].Instances[*].[PublicIpAddress]" | jq ".[] | .[] | .[]" | tr -d '"')
 PRODUCTION_USER=deploy
 DELIVER_TO=/var/www/${APP}
 
+STAGING_HOSTS=$(aws ec2 describe-instances --region us-west-2 --output json --filters "Name=tag:Environment,Values=staging" "Name=tag:Application,Values=${APP}" "Name=instance-state-name,Values=running"  --query "Reservations[*].Instances[*].[PublicIpAddress]" | jq ".[] | .[] | .[]" | tr -d '"')
 pre_erlang_get_and_update_deps() {
   status "Copying configs from $CONFIGS_AT to $BUILD_AT/config/"
   __sync_remote "cp $CONFIGS_AT/* $BUILD_AT/config/"
