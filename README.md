@@ -15,7 +15,7 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
 This app is deployed via [edeliver](https://github.com/edeliver/edeliver).
 
-For more information, see the presentation about this project #TODO: add link here
+For more information, see the [presentation about this project](https://docs.google.com/presentation/d/16QL_LJpoOnDzmKVSEKMwmj2m1_tIjtelY6BTrX8FloQ/edit?usp=sharing)
 
 ## Learn more
 
