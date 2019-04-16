@@ -1,3 +1,57 @@
 #!/bin/bash
 
+USING_DISTILLERY=true
+
+MIX_ENV=${MIX_ENV:-"prod"}
+
+APP=mvp
+
+BUILD_HOST= # Your build host goes here
+BUILD_USER=deploy
+BUILD_AT=/home/deploy/builds/${APP}/${MIX_ENV}
+CONFIGS_AT=/home/deploy/configs/${APP}
+
+STAGING_USER=deploy
+TEST_AT=/var/www/${APP}
+
+require_installed() {
+  hash $1
+
+  if [[ $? -eq 1 ]]; then
+    echo "Please install $1 to continue deploying"
+    exit 1
+  fi
+}
+
+
+require_installed aws
+require_installed jq
+
+if [[ -z $AWS_ACCESS_KEY_ID || -z $AWS_SECRET_ACCESS_KEY ]]; then
+  echo "You must set \$AWS_ACCESS_KEY_ID and \$AWS_SECRET_ACCESS_KEY before deploying"
+  exit 2
+fi
+AWS_BUCKET="server-stuff"
+RELEASE_STORE="s3://$AWS_ACCESS_KEY_ID@$AWS_SECRET_ACCESS_KEY:${AWS_BUCKET}/${APP}/$MIX_ENV"
+
+PRODUCTION_HOSTS=$(aws ec2 describe-instances --region us-west-2 --output json "Name=tag:Application,Values=api" "Name=instance-state-name,Values=running" --query "Reservations[*].Instances[*].[PublicIpAddress]" | jq ".[] | .[] | .[]" | tr -d '"')
+PRODUCTION_USER=deploy
+DELIVER_TO=/var/www/${APP}
+
+pre_erlang_get_and_update_deps() {
+  status "Copying configs from $CONFIGS_AT to $BUILD_AT/config/"
+  __sync_remote "cp $CONFIGS_AT/* $BUILD_AT/config/"
+}
+
+git_checkout_remote() {
+  local _revision=$1
+  status "Checking out $_revision, the rad way"
+  __sync_remote "
+    [ -f ~/.profile ] && source ~/.profile
+    set -e
+    cd $DELIVER_TO
+    git stash
+    git checkout $_revision
+  "
+}
 
